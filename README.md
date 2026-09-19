@@ -10,10 +10,26 @@
 
 ---
 
-## 🌟 Visual Showcase
+## 🌟 The 4 Core Pillars of KinConnect
 
-### 1. Synchronized Two-Way Connected Bridge (Senior Voice Hub ↔ Family Dashboard)
+KinConnect goes beyond a simple chatbot or messaging tool. It acts as an **intelligent, accessible, and trustworthy daily companion** that anticipates needs, simplifies complex tasks, and protects vulnerable elders:
+
+1. **🎙️ Voice-First Family Bridge (Prompts A & B)**: Zero-learning-curve voice companion with automatic slang removal and daily audio story digest.
+2. **📄 GenAI Document & Bill Simplifier**: Translates complex medical bills (Medicare notices, hospital instructions, utility adjustments) into 3 plain-English bullet points with a clear *"Do I owe money?"* verdict and slow-voice audio narration.
+3. **🛡️ GenAI Trust & Scam Shield**: Proactively detects high-risk fraud (IRS gift card scams, grandchild impersonation emergencies) and provides reassuring, calm safety guidance while immediately alerting family.
+4. **☀️ Proactive Daily Routine & Wellness**: Anticipates daily needs (medication tracking, hydration prompts, chair stretches, weather-adapted clothing reminders) with audible encouragement.
+5. **🔒 Security & Resilience**: Strict Content Security Policy (CSP), XSS input sanitization, image URL validation, and senior-accessible React `ErrorBoundary`.
+
+---
+
+## 📸 Visual Showcase
+
+### 1. Multi-Pillar Senior Daily Companion & Synchronized Family Bridge
+![Multi-Pillar Application](docs/test_multipillar_full.png)
+
+### 2. Synchronized Two-Way Connected Bridge
 ![Split Screen Connected Bridge](docs/test_split_view.png)
+
 
 ### 2. Zero-Learning-Curve Senior Voice Hub & Live Delivery
 ![Senior Sent & Synchronized Delivery](docs/test_senior_sent.png)

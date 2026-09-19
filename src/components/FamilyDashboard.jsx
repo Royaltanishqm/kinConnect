@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Send, 
   Sparkles, 
@@ -9,44 +9,57 @@ import {
   Image as ImageIcon, 
   Check, 
   ShieldCheck, 
+  ShieldAlert,
   Smile, 
   Mic, 
   Activity, 
   ArrowRight,
   RefreshCw,
-  BellRing
+  BellRing,
+  FileText
 } from 'lucide-react';
 import { translateFamilyUpdateToStory } from '../services/translatorService';
+import { sanitizeInput, isSafeImageUrl, SAFE_FALLBACK_IMAGE } from '../services/securityService';
 
 export default function FamilyDashboard({ 
   seniorMessages, 
   onAddReaction, 
   onPostFamilyUpdate,
-  familyMembers 
+  familyMembers,
+  scamAlerts = [],
+  sharedDocuments = []
 }) {
   const [selectedMember, setSelectedMember] = useState(familyMembers[0]);
   const [rawText, setRawText] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
-  const [showLiveTranslation, setShowLiveTranslation] = useState(true);
-  const [activeTab, setActiveTab] = useState('feed'); // 'feed' | 'compose' | 'overview'
+  const [activeTab, setActiveTab] = useState('feed'); // 'feed' | 'security' | 'docs'
 
   // Live preview of Intergenerational Translation
-  const liveTranslation = translateFamilyUpdateToStory(
-    selectedMember.name,
-    selectedMember.relation,
-    rawText
-  );
+  const liveTranslation = useMemo(() => {
+    return translateFamilyUpdateToStory(
+      selectedMember.name,
+      selectedMember.relation,
+      rawText
+    );
+  }, [selectedMember, rawText]);
 
   const handlePostUpdate = (e) => {
     e.preventDefault();
-    if (!rawText.trim()) return;
+    const cleanText = sanitizeInput(rawText, 500);
+    if (!cleanText) return;
+
+    const validatedPhoto = isSafeImageUrl(photoUrl) 
+      ? photoUrl 
+      : (selectedMember.id === 'riya' 
+          ? 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&auto=format&fit=crop&q=80' 
+          : SAFE_FALLBACK_IMAGE);
 
     onPostFamilyUpdate({
       author: selectedMember.name,
       authorRelation: selectedMember.relation,
       avatar: selectedMember.avatar,
-      rawText: rawText,
-      photoUrl: photoUrl || (selectedMember.id === 'riya' ? 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&auto=format&fit=crop&q=80')
+      rawText: cleanText,
+      photoUrl: validatedPhoto
     });
 
     setRawText('');
@@ -92,6 +105,48 @@ export default function FamilyDashboard({
           </div>
         </div>
       </div>
+
+      {/* Security Alerts Banner for Family (If any scam detected by Eleanor) */}
+      {scamAlerts.length > 0 && (
+        <div className="bg-rose-50 border-2 border-rose-400 rounded-3xl p-5 shadow-md flex items-start gap-4 animate-fadeIn">
+          <ShieldAlert className="w-8 h-8 text-rose-600 flex-shrink-0 mt-0.5" />
+          <div className="flex-1 space-y-1">
+            <h4 className="text-lg font-extrabold text-rose-950">
+              ⚠️ Security Shield Alert: Eleanor checked a suspicious message!
+            </h4>
+            <p className="text-sm text-rose-800 font-medium leading-relaxed">
+              Eleanor used the Scam Shield to test: "{scamAlerts[0].source}". GenAI flagged it as High Risk and instructed her not to send money. Please give her a quick call to reassure her.
+            </p>
+            <div className="pt-2 flex items-center gap-3">
+              <a
+                href="tel:5550199"
+                className="px-4 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold text-xs flex items-center gap-1.5"
+              >
+                <Phone className="w-3.5 h-3.5" />
+                <span>Call Eleanor Now</span>
+              </a>
+              <span className="text-xs text-rose-700 font-semibold">
+                ✓ AI Protection Active
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Shared Documents Notification (If Eleanor simplified any bills) */}
+      {sharedDocuments.length > 0 && (
+        <div className="bg-blue-50 border-2 border-blue-300 rounded-3xl p-5 shadow-sm flex items-start gap-4">
+          <FileText className="w-7 h-7 text-blue-600 flex-shrink-0 mt-0.5" />
+          <div className="flex-1 space-y-1">
+            <h4 className="text-base font-bold text-blue-950">
+              📄 Eleanor shared a simplified document: {sharedDocuments[0].title}
+            </h4>
+            <p className="text-xs text-blue-800 font-medium">
+              Verdict: <strong>{sharedDocuments[0].costVerdict}</strong>. Eleanor has been informed no immediate action is needed.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Main Grid: Left = Senior Feed & AI Polished Updates, Right = Post & Intergenerational Translator */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
