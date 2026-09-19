@@ -11,14 +11,18 @@ import {
   FileText,
   ShieldCheck,
   Sun,
-  Mic
+  Mic,
+  Home,
+  Compass
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import ErrorBoundary from './components/ErrorBoundary';
+import SeniorDailyHome from './components/SeniorDailyHome';
 import SeniorVoiceHub from './components/SeniorVoiceHub';
 import ComplexInfoSimplifier from './components/ComplexInfoSimplifier';
 import TrustScamShield from './components/TrustScamShield';
 import ProactiveDailyAssistant from './components/ProactiveDailyAssistant';
+import EverydayTaskNavigator from './components/EverydayTaskNavigator';
 import FamilyDashboard from './components/FamilyDashboard';
 import ConnectedWorkflowModal from './components/ConnectedWorkflowModal';
 import HelpCompanionModal from './components/HelpCompanionModal';
@@ -35,8 +39,9 @@ import {
 import { sanitizeInput } from './services/securityService';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('split'); // 'senior' | 'family' | 'split'
-  const [seniorTab, setSeniorTab] = useState('voice'); // 'voice' | 'docs' | 'shield' | 'routine'
+  // Default to Senior Daily Companion view for direct Problem Statement alignment
+  const [currentView, setCurrentView] = useState('senior'); // 'senior' | 'family' | 'split'
+  const [seniorTab, setSeniorTab] = useState('home'); // 'home' | 'docs' | 'shield' | 'tasks' | 'routine' | 'voice'
   
   const [familyMembers] = useState(INITIAL_FAMILY_MEMBERS);
   const [seniorMessages, setSeniorMessages] = useState(INITIAL_SENIOR_MESSAGES);
@@ -171,12 +176,12 @@ export default function App() {
                   <span className="text-xl font-black text-slate-900 tracking-tight font-serif">
                     KinConnect
                   </span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full">
-                    AI Senior Companion
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider bg-orange-100 text-orange-900 px-2.5 py-0.5 rounded-full">
+                    Intelligent Senior Companion
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 hidden sm:block">
-                  Intelligent, Accessible &amp; Trustworthy Daily Companion
+                <p className="text-xs text-slate-600 font-medium hidden sm:block">
+                  Navigating everyday tasks with ease, confidence &amp; independence
                 </p>
               </div>
             </div>
@@ -192,7 +197,7 @@ export default function App() {
                 }`}
               >
                 <Tablet className="w-4 h-4" />
-                <span>👴 Senior Tablet Mode</span>
+                <span>👴 Senior Companion</span>
               </button>
 
               <button
@@ -236,57 +241,78 @@ export default function App() {
 
         {/* Senior Pillar Tabs (Visible when in Senior Mode or Split Mode) */}
         {(currentView === 'senior' || currentView === 'split') && (
-          <nav className="bg-amber-50/60 border-b border-amber-200/70 px-4 py-2.5">
+          <nav className="bg-amber-50/70 border-b border-amber-200/80 px-4 py-2.5">
             <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-center md:justify-start gap-2">
-              <span className="text-xs font-black uppercase tracking-wider text-slate-500 mr-2 hidden md:inline">
-                Companion Pillars:
-              </span>
               <button
-                onClick={() => setSeniorTab('voice')}
-                className={`px-4 py-2 rounded-2xl font-extrabold text-sm flex items-center gap-2 transition-all ${
-                  seniorTab === 'voice'
-                    ? 'bg-orange-600 text-white shadow-md'
-                    : 'bg-white text-slate-700 hover:bg-orange-50 border border-slate-200'
+                onClick={() => setSeniorTab('home')}
+                className={`px-3.5 py-2 rounded-2xl font-extrabold text-sm flex items-center gap-1.5 transition-all ${
+                  seniorTab === 'home'
+                    ? 'bg-slate-900 text-white shadow-md'
+                    : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
                 }`}
               >
-                <Mic className="w-4 h-4" />
-                <span>1. Voice &amp; Family Story</span>
-              </button>
-
-              <button
-                onClick={() => setSeniorTab('docs')}
-                className={`px-4 py-2 rounded-2xl font-extrabold text-sm flex items-center gap-2 transition-all ${
-                  seniorTab === 'docs'
-                    ? 'bg-indigo-600 text-white shadow-md'
-                    : 'bg-white text-slate-700 hover:bg-indigo-50 border border-slate-200'
-                }`}
-              >
-                <FileText className="w-4 h-4" />
-                <span>2. Simplify Bills &amp; Letters</span>
-              </button>
-
-              <button
-                onClick={() => setSeniorTab('shield')}
-                className={`px-4 py-2 rounded-2xl font-extrabold text-sm flex items-center gap-2 transition-all ${
-                  seniorTab === 'shield'
-                    ? 'bg-rose-600 text-white shadow-md'
-                    : 'bg-white text-slate-700 hover:bg-rose-50 border border-slate-200'
-                }`}
-              >
-                <ShieldCheck className="w-4 h-4" />
-                <span>3. Scam &amp; Trust Shield</span>
+                <Home className="w-4 h-4" />
+                <span>Companion Home</span>
               </button>
 
               <button
                 onClick={() => setSeniorTab('routine')}
-                className={`px-4 py-2 rounded-2xl font-extrabold text-sm flex items-center gap-2 transition-all ${
+                className={`px-3.5 py-2 rounded-2xl font-extrabold text-sm flex items-center gap-1.5 transition-all ${
                   seniorTab === 'routine'
                     ? 'bg-emerald-600 text-white shadow-md'
                     : 'bg-white text-slate-700 hover:bg-emerald-50 border border-slate-200'
                 }`}
               >
                 <Sun className="w-4 h-4" />
-                <span>4. Daily Routine &amp; Wellness</span>
+                <span>Daily Routine</span>
+              </button>
+
+              <button
+                onClick={() => setSeniorTab('docs')}
+                className={`px-3.5 py-2 rounded-2xl font-extrabold text-sm flex items-center gap-1.5 transition-all ${
+                  seniorTab === 'docs'
+                    ? 'bg-indigo-600 text-white shadow-md'
+                    : 'bg-white text-slate-700 hover:bg-indigo-50 border border-slate-200'
+                }`}
+              >
+                <FileText className="w-4 h-4" />
+                <span>Simplify Bills &amp; Letters</span>
+              </button>
+
+              <button
+                onClick={() => setSeniorTab('shield')}
+                className={`px-3.5 py-2 rounded-2xl font-extrabold text-sm flex items-center gap-1.5 transition-all ${
+                  seniorTab === 'shield'
+                    ? 'bg-rose-600 text-white shadow-md'
+                    : 'bg-white text-slate-700 hover:bg-rose-50 border border-slate-200'
+                }`}
+              >
+                <ShieldCheck className="w-4 h-4" />
+                <span>Scam Shield</span>
+              </button>
+
+              <button
+                onClick={() => setSeniorTab('tasks')}
+                className={`px-3.5 py-2 rounded-2xl font-extrabold text-sm flex items-center gap-1.5 transition-all ${
+                  seniorTab === 'tasks'
+                    ? 'bg-teal-700 text-white shadow-md'
+                    : 'bg-white text-slate-700 hover:bg-teal-50 border border-slate-200'
+                }`}
+              >
+                <Compass className="w-4 h-4" />
+                <span>Everyday Tasks</span>
+              </button>
+
+              <button
+                onClick={() => setSeniorTab('voice')}
+                className={`px-3.5 py-2 rounded-2xl font-extrabold text-sm flex items-center gap-1.5 transition-all ${
+                  seniorTab === 'voice'
+                    ? 'bg-orange-600 text-white shadow-md'
+                    : 'bg-white text-slate-700 hover:bg-orange-50 border border-slate-200'
+                }`}
+              >
+                <Mic className="w-4 h-4" />
+                <span>Voice Hub &amp; Story</span>
               </button>
             </div>
           </nav>
@@ -297,13 +323,14 @@ export default function App() {
           {/* SINGLE SENIOR VIEW */}
           {currentView === 'senior' && (
             <div className="pt-2 animate-fadeIn">
-              {seniorTab === 'voice' && (
-                <SeniorVoiceHub
-                  onSendSeniorMessage={handleSendSeniorMessage}
-                  familyUpdates={familyUpdates}
-                  dailyStory={dailyStory}
+              {seniorTab === 'home' && (
+                <SeniorDailyHome
+                  onNavigateTab={(tab) => setSeniorTab(tab)}
                   onOpenHelp={() => setIsHelpModalOpen(true)}
                 />
+              )}
+              {seniorTab === 'routine' && (
+                <ProactiveDailyAssistant />
               )}
               {seniorTab === 'docs' && (
                 <ComplexInfoSimplifier
@@ -315,8 +342,18 @@ export default function App() {
                   onAlertFamily={handleAlertFamilyScam}
                 />
               )}
-              {seniorTab === 'routine' && (
-                <ProactiveDailyAssistant />
+              {seniorTab === 'tasks' && (
+                <EverydayTaskNavigator
+                  onShareWithFamily={handleShareDocumentWithFamily}
+                />
+              )}
+              {seniorTab === 'voice' && (
+                <SeniorVoiceHub
+                  onSendSeniorMessage={handleSendSeniorMessage}
+                  familyUpdates={familyUpdates}
+                  dailyStory={dailyStory}
+                  onOpenHelp={() => setIsHelpModalOpen(true)}
+                />
               )}
             </div>
           )}
@@ -335,15 +372,15 @@ export default function App() {
             </div>
           )}
 
-          {/* SPLIT DEMO VIEW (For Judges & Full Workflow) */}
+          {/* SPLIT DEMO VIEW (For Judges & Full Connected Workflow) */}
           {currentView === 'split' && (
             <div className="max-w-[1700px] mx-auto px-4 pt-6 space-y-4">
               <div className="bg-gradient-to-r from-orange-50 via-amber-50 to-indigo-50 border border-orange-200 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 text-slate-800 text-xs">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-                  <span className="font-bold text-sm">Synchronized Connected Daily Companion:</span>
+                  <span className="font-bold text-sm">Connected Everyday Senior Companion:</span>
                   <span className="text-slate-600">
-                    Switch the companion tabs above to test Voice Hub, Document Simplifier, Scam Shield, and Daily Wellness. Watch family sync in real time!
+                    Switch between Companion Home, Daily Routine, Bills Simplifier, Scam Shield, and Voice Hub. Watch family sync in real time!
                   </span>
                 </div>
                 <button
@@ -363,17 +400,18 @@ export default function App() {
                       Senior Daily Companion (Eleanor)
                     </span>
                     <span className="text-xs text-orange-700 font-medium">
-                      Pillar Active: {seniorTab.toUpperCase()}
+                      Active: {seniorTab.toUpperCase()}
                     </span>
                   </div>
 
-                  {seniorTab === 'voice' && (
-                    <SeniorVoiceHub
-                      onSendSeniorMessage={handleSendSeniorMessage}
-                      familyUpdates={familyUpdates}
-                      dailyStory={dailyStory}
+                  {seniorTab === 'home' && (
+                    <SeniorDailyHome
+                      onNavigateTab={(tab) => setSeniorTab(tab)}
                       onOpenHelp={() => setIsHelpModalOpen(true)}
                     />
+                  )}
+                  {seniorTab === 'routine' && (
+                    <ProactiveDailyAssistant />
                   )}
                   {seniorTab === 'docs' && (
                     <ComplexInfoSimplifier
@@ -385,8 +423,18 @@ export default function App() {
                       onAlertFamily={handleAlertFamilyScam}
                     />
                   )}
-                  {seniorTab === 'routine' && (
-                    <ProactiveDailyAssistant />
+                  {seniorTab === 'tasks' && (
+                    <EverydayTaskNavigator
+                      onShareWithFamily={handleShareDocumentWithFamily}
+                    />
+                  )}
+                  {seniorTab === 'voice' && (
+                    <SeniorVoiceHub
+                      onSendSeniorMessage={handleSendSeniorMessage}
+                      familyUpdates={familyUpdates}
+                      dailyStory={dailyStory}
+                      onOpenHelp={() => setIsHelpModalOpen(true)}
+                    />
                   )}
                 </div>
 
@@ -431,7 +479,7 @@ export default function App() {
         {/* Global Footer */}
         <footer className="mt-auto border-t border-slate-200 bg-white py-4 px-6 text-center text-xs text-slate-500">
           <p>
-            KinConnect • Intelligent, Accessible &amp; Trustworthy Senior Daily Companion • GenAI Voice Hub, Document Simplifier, Scam Shield &amp; Family Bridge
+            KinConnect • Intelligent, Accessible &amp; Trustworthy Senior Daily Companion • Helping Seniors Navigate Everyday Tasks with Ease &amp; Independence
           </p>
         </footer>
       </div>

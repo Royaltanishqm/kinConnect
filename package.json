@@ -7,10 +7,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "test": "node test-e2e.js",
     "predeploy": "vite build",
     "deploy": "gh-pages -d dist --dotfiles",
     "preview": "vite preview"
   },
+
 
   "dependencies": {
     "canvas-confetti": "^1.9.4",
